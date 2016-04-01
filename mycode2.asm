@@ -9,7 +9,7 @@
     CR  EQU 0DH
     LF  EQU 0AH
 
-MSG1    DB  'LOWER: $'
+RESULT    DB    ?,'$'
 MSG2    DB  0DH,0AH,'UPPER: '
 CHAR    DB  ?,'$'
 N       DW  0
@@ -19,36 +19,23 @@ MAIN PROC
    
    
    mov ax,@data
-    mov ds,ax          
+    mov ds,ax
+    mov es,ax          
     
-loop1:     
-
+   
     
        
-    
-    
-    MOV AH,1
-    INT 21H
-    CMP AL,0DH
-    JE endloop 
-    SUB AL,'0'  
-    mov ah,0  
-    
-    MOV CX,9
-    MOV BX,N
-    
-TOP:
-
-    ADD BX,N
-    LOOP TOP                  ;MULTIPLY 10
-    
-    MOV N,BX
-    ADD n,ax
-    JMP loop1
-    
+      
 endloop:  
        
-       
+   LEA DI,RESULT
+   CLD 
+   MOV AL,'A'
+   STOSB
+   STOSB
+   LEA DX,RESULT
+   MOV AH,9
+   INT 21H   
     
     MOV AH,4CH
     INT 21H
