@@ -6,11 +6,9 @@
 .STACK 100H
 .DATA
 
-    CR  EQU 0DH
-    LF  EQU 0AH
+    
 
-MSG1    DB  'LOWER: $'
-MSG2    DB  0DH,0AH,'UPPER: '
+RESULT     DB  ,'$'
 CHAR    DB  ?,'$'
 N       DW  0
 
@@ -19,7 +17,17 @@ MAIN PROC
    
    
    mov ax,@data
-    mov ds,ax          
+    mov ds,ax 
+    MOV ES,AX  
+    
+   LEA DI,RESULT            ;STRCOPY
+   CLD 
+   MOV AL,'A'
+   STOSB
+   STOSB
+   LEA DX,RESULT
+   MOV AH,9
+   INT 21H                   ;STRCPY
     
 loop1:     
 
