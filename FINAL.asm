@@ -28,9 +28,6 @@ MAIN PROC
     INT 21H
     CMP AL,'-'
     JNE Q2 
-    
-Q1:
-    
     MOV SIGN,1
       
 loop1:     
@@ -39,7 +36,9 @@ loop1:
     
     MOV AH,1             ;INPUT
     INT 21H
-Q2:
+
+Q2:    
+    
     CMP AL,0DH
     JE  TASK 
     SUB AL,'0'  
@@ -59,8 +58,9 @@ Q2:
    
 TASK:   
     
-    
-    CMP SIGN,1
+    CMP N,0
+    JE ZERO
+    CMP SIGN,1              ;check sign
     JNE TASK2
     NEG N       
     
@@ -94,8 +94,8 @@ THEN:
     
 endloop:  
    
-   MOV CX,CHAR
-   MOV DL,0DH
+    MOV CX,CHAR
+    MOV DL,0DH
     MOV AH,2
     INT 21H
     MOV DL,0AH
@@ -122,8 +122,21 @@ FIN:
      
     SHR str1,1
     LOOP PRINT
+    jmp END 
     
-
+ZERO:
+    
+    MOV DL,0DH
+    MOV AH,2
+    INT 21H
+    MOV DL,0AH
+    MOV AH,2
+    INT 21H
+    MOV DL,'0'
+    MOV AH,2
+    INT 21H
+    
+end:
 
     MOV AH,4CH
     INT 21H
