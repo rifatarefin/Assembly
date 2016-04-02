@@ -6,11 +6,11 @@
 .STACK 100H
 .DATA
 
-    CR  EQU 0DH
-    LF  EQU 0AH
+STRING1 DB '$ASSEMBLY LANGUAGE'
+LENGTH  DW  17
 
-RESULT    DB    ?,'$'
-MSG2    DB  0DH,0AH,'UPPER: '
+RESULT    DB   ?
+
 CHAR    DB  ?,'$'
 N       DW  0
 
@@ -20,7 +20,18 @@ MAIN PROC
    
    mov ax,@data
     mov ds,ax
-    mov es,ax          
+    mov es,ax 
+    MOV SI, OFFSET STRING1   ;REVERSE
+    MOV CX,LENGTH
+    ADD SI,CX
+    
+BACK:
+
+    MOV DL,[SI]
+    MOV AH,02H
+    INT 21H
+    DEC SI
+    LOOP BACK                 ;REVERSE
     
    
     
