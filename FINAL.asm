@@ -9,10 +9,11 @@
     
 
 RESULT     DB  ?,'$'
-STR1    DW  0 
-TMP     DW  0
-CHAR    DW  0
-N       DW  0  
+STR1    DW  0              ;main binary
+TMP     DW  0              ;remainder
+CHAR    DW  0              ;no of bits
+N       DW  0              ;input
+SIGN    DB  0
  
 
 
@@ -20,22 +21,25 @@ N       DW  0
 MAIN PROC
    
    
-   mov ax,@data
+    mov ax,@data
     mov ds,ax 
-    MOV ES,AX  
+      
+    MOV AH,1
+    INT 21H
+    CMP AL,'-'
+    JNE Q2 
     
+Q1:
     
-   
-    
-    
+    MOV SIGN,1
+      
 loop1:     
-
-    
-       
+   
     
     
     MOV AH,1             ;INPUT
     INT 21H
+Q2:
     CMP AL,0DH
     JE  TASK 
     SUB AL,'0'  
@@ -56,8 +60,12 @@ loop1:
 TASK:   
     
     
-           
+    CMP SIGN,1
+    JNE TASK2
+    NEG N       
     
+TASK2:
+
     CMP N,0
     JE endloop
 
@@ -82,7 +90,7 @@ THEN:
     ADD AX,TMP
     MOV STR1,AX
     INC CHAR        
-    JMP TASK
+    JMP TASK2
     
 endloop:  
    
