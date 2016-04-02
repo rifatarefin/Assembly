@@ -58,8 +58,7 @@ Q2:
    
 TASK:   
     
-    CMP N,0
-    JE ZERO
+    
     CMP SIGN,1              ;check sign
     JNE TASK2
     NEG N       
@@ -67,7 +66,7 @@ TASK:
 TASK2:
 
     CMP N,0
-    JE endloop
+    JE STRINGP
 
 
     MOV AX,N
@@ -92,33 +91,37 @@ THEN:
     INC CHAR        
     JMP TASK2
     
-endloop:  
+  
    
-    MOV CX,CHAR
+STRINGP:
+
+    MOV CX,CHAR              ;new line
     MOV DL,0DH
     MOV AH,2
     INT 21H
     MOV DL,0AH
     MOV AH,2
     INT 21H
+    CMP CX,0
+    JE ZERO
        
 PRINT:
     
     MOV AX,STR1
     TEST AX,1
-    JNZ SKIP
+    JNZ one
     MOV DL,'0'
     MOV AH,2
     INT 21H
-    JMP FIN
+    JMP RIGHT
     
-SKIP:
+ONE:
 
     MOV DL,'1'
     MOV AH,2
     INT 21H
     
-FIN:
+RIGHT:
      
     SHR str1,1
     LOOP PRINT
@@ -126,12 +129,7 @@ FIN:
     
 ZERO:
     
-    MOV DL,0DH
-    MOV AH,2
-    INT 21H
-    MOV DL,0AH
-    MOV AH,2
-    INT 21H
+    
     MOV DL,'0'
     MOV AH,2
     INT 21H
