@@ -8,7 +8,8 @@
 
     
 
-RESULT     DB  ?,'$'
+RESULT  DB  'Case #'
+CASE    DB  ?,'$'
 STR1    DW  0              ;main binary
 TMP     DW  0              ;remainder
 CHAR    DW  0              ;no of bits
@@ -22,8 +23,7 @@ MAIN PROC
    
    
     mov ax,@data
-    mov ds,ax 
-      
+    mov ds,ax   
     MOV AH,1
     INT 21H
     CMP AL,'-'
@@ -94,13 +94,17 @@ THEN:
   
    
 STRINGP:
-
+    
+    
     MOV CX,CHAR              ;new line
     MOV DL,0DH
     MOV AH,2
     INT 21H
     MOV DL,0AH
     MOV AH,2
+    INT 21H
+    MOV AH,9
+    LEA DX,RESULT
     INT 21H
     CMP CX,0
     JE ZERO
