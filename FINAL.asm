@@ -9,9 +9,9 @@
     
 
 RESULT  DB  'Case #'
-CASE    DB  '1',': $'
-T       DB  ?
-TC      DB  1
+CASE    DW  '1',': $'
+T       DW  0
+TC      DW  1
 STR1    DW  0              ;main binary
 TMP     DW  0              ;remainder
 CHAR    DW  0              ;no of bits
@@ -26,15 +26,25 @@ MAIN PROC
    
     mov ax,@data
     mov ds,ax
+TIN:
     
     MOV AH,1
     INT 21H
-    MOV T,AL
-    SUB T,'0'
+    CMP AL,0DH
+    JE START
+    SUB AL,'0'
+    MOV AH,0 
+    MOV BX,AX
+    MOV AX,10
+    IMUL T
+    MOV T,AX
+    ADD T,BX
+    JMP TIN
+    
 START:
     
-    MOV AL,T
-    CMP TC,AL
+    MOV AX,T
+    CMP TC,AX
     JG  END1
     
     MOV DL,0DH
