@@ -19,7 +19,7 @@ TEMP    DW  ?
 .CODE  
 
 
-OUTDEC PROC
+OUTDEC PROC                ;PRINT FUNCTION
     ;INPUT AX
     PUSH AX
     PUSH BX
@@ -60,7 +60,7 @@ OUTDEC PROC
     POP BX
     POP AX
     RET
-OUTDEC ENDP   
+OUTDEC ENDP                 ;PRINT FUNCTION
   
   
 PARTITION PROC
@@ -80,9 +80,9 @@ AAA:
     CMP AL,PIVOT
     JG A2 
     
-    INC I 
-    MOV AL,A[BX]
-    MOV J,AL           ;J=A[J]
+    INC I                               ;IF A[J]<PIVOT
+    MOV AL,A[BX]                        ;I++
+    MOV J,AL           ;J=A[J]          ;SWAP a[I]<>A[J]
     MOV TEMP,BX        ;TEMP=J
     MOV BX,I
     MOV AL,A[BX]       ;AX=A[I]
@@ -99,8 +99,8 @@ A2:
     
 
 LAST: 
-    INC I
-    MOV BX,I
+    INC I                ;I++
+    MOV BX,I             ;SWAP A[I]<>A[HIGH]
     MOV AL,A[BX]
     MOV BX,HIGH
     MOV A[BX],AL         ;A[HIGH]=A[I]
@@ -120,15 +120,14 @@ QUICKSORT PROC
     MOV BP,SP
     MOV AX,[BP+6]       ;GET HIGH
     MOV HIGH,AX
-    MOV AX,[BP+4]
+    MOV AX,[BP+4]       ;GET LOW
     MOV LOW, AX
     MOV I,AX           ;PARTITION
-   ; MOV J,aL            ;PARTITION
     CMP AX,HIGH       ;K=N?
     JGE RETURN             ;YES NON RECURSIVE CASE
     
 
-    ELSE_: 
+     
     CALL PARTITION
 
     MOV AX,I
@@ -241,21 +240,24 @@ NOW:
     PUSH SIZE
     PUSH 0
     CALL QUICKSORT
-    
-    XOR BX,BX
-PRINT:
-    
     MOV DL,0DH             ;NEW LINE
     MOV AH,2
     INT 21H
     MOV DL,0AH
     MOV AH,2
     INT 21H
+    XOR BX,BX
+PRINT:
+    
+    
     
     MOV AL,A[BX]
     MOV AH,0
     CALL OUTDEC
     INC BX
+    MOV AH,2
+    MOV DL,' '
+    INT 21H
     LOOP PRINT
     
     MOV AH,4CH
