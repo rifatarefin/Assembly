@@ -2,12 +2,14 @@
 .Stack 100h
 .DATA
 A DW ?
-B Dw ?        ;b,c hor highlight
-c dw ?
-P DB ?
-Q DB ?
+B Dw 80        ;b,c hor highlight
+c dw 80
+P DB 13
+Q DB 7
 X DW 80
 Y DW 80
+GRID DB 9 DUP(0)
+ID DW 0
 draw_row Macro 
     Local l1,l2,L3,L4
     ; draws a line in row y from col x to col 300
@@ -57,17 +59,12 @@ L4:
 DRAW_BOX MACRO
 
 
-    mOV AH, 0BH ;function OBh
-    MOV BH,00H ;select background color
-    Mov BL,14 ;yellow
-    INT 10H
-    MOV BH,1 ; select palette
-    mOV BL,1 ; red
-    INT 10H
     
-; draw line pixel by pixel  
+    
+; draw line pixel by pixel 
+     
     MOV AH, 0CH
-    MOV AL,3
+    MOV AL,4         ;white
     ;row 3
     MOV X,80
     MOV Y,170
@@ -106,7 +103,7 @@ CHAR_SHOW MACRO
 ; write char        
         MOV AH, 9
         ;MOV AL, 'O'
-        MOV BL, 2 ; color value from palette
+        ;MOV BL, 0 ; color value from palette
         MOV CX, 1
         INT 10h
         
@@ -118,33 +115,29 @@ main Proc
     MOV DS,AX
  
 ; set CGA 320x200 high res mode
-    MOV AX,4
+    MOV AX,13
     INT 10h
     
     
-    ;DRAW_BOX
-    ;mov al,2            ;new box
-    DRAW_BOX
-    MOV b,80
-    MOV C,80
-    MOV P,13
-    MOV Q,7
     
     
-kkk:    
+    
+kkk:                          ;GAME LOOP
     ;B=ROW,C=COLUMN
     ;DRAW HIGHLIGHTED BOX
+    
     DRAW_BOX
-    MOV AL,2                
+    
+    
+    
+    MOV AL,15              
     MOV BX,B
     MOV X,BX
+    ;INC X
     MOV BX,C
     MOV Y,BX
+    ;INC Y
     DRAW_ROW
-    
-    
-   
-    
     
         
     ;INPUT COMMAND   
@@ -156,8 +149,6 @@ kkk:
     JE LEFT
     CMP AH,72
     JE UP
-    CMP AH,80
-    JE DOWN
     JMP GOL
     
  
@@ -166,10 +157,12 @@ RIGHT:
     JGE TT
     ADD P,6
     ADD B,50
+    INC ID
     JMP KKK
 TT:
     MOV B,80
     MOV P,13
+    SUB ID,2
     JMP KKK
     
 LEFT:
@@ -177,10 +170,12 @@ LEFT:
     JLE TT2
     SUB B,50
     SUB P,6
+    DEC ID
     JMP KKK
 TT2:
     MOV B,180
     MOV P,25
+    ADD ID,2
     JMP KKK
     
 UP:
@@ -188,10 +183,12 @@ UP:
     JLE DDD
     SUB C,45
     SUB Q,6
+    SUB ID,3
     JMP KKK
 DDD:
     MOV C,170
     MOV Q,18
+    ADD ID,6
     JMP KKK
 
 DOWN:
@@ -199,13 +196,17 @@ DOWN:
     JGE DDD2
     ADD C,45
     ADD Q,6
+    ADD ID,3
     JMP KKK
 DDD2:
     MOV C,80
     MOV Q,7
+    SUB ID,6
     JMP KKK 
 
 GOL:
+    CMP AH,80
+    JE DOWN
     CMP AH,18H
     JE OOP
     CMP AH,2DH
@@ -214,17 +215,31 @@ GOL:
     
 
 OOP:
+    
+    MOV BX,ID
+    CMP GRID[BX],0
+    JE OOP2
+    JMP KKK
+OOP2:
+    MOV GRID[BX],1
     MOV DH,Q
     MOV DL,P
     MOV AL,'O'
+    MOV BL,14
     CHAR_SHOW
     JMP KKK
    
 AXE: 
- 
+    MOV BX,ID
+    CMP GRID[BX],0
+    JE AXE2
+    JMP KKK
+AXE2:
+    MOV GRID[BX],2
     MOV DH,Q
     MOV DL,P
     MOV AL,'X'
+    MOV BL,1
     CHAR_SHOW
     JMP KKK   
 
