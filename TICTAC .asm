@@ -3,15 +3,18 @@
 .DATA
 A DW ?
 B Dw 80        ;b,c hor highlight
-c dw 80
+c dw 76
 P DB 13        ;P,Q FOR TEXT COORDINATE
-Q DB 7
+Q DB 6
 X DW 80
-Y DW 80
+Y DW 76
 GRID DB 9 DUP(0)
 ID DW 0
+TURN DB 1
+STEP DB 0
 PLAYER1 DB 'PLAYER 1 WINS$'
 PLAYER2 DB 'PLAYER 2 WINS$'
+DRAW DB 'GAME DRAW$'
 
 draw_row Macro            ;DRAWS BOX ON (B,C)
     Local l1,l2,L3,L4
@@ -26,7 +29,7 @@ L1: INT 10h
     CMP CX, a
     JL L1
     ;;;;;;;;
-    SUB DX,45
+    SUB DX,47
     MOV CX, x
 L2:
 
@@ -39,7 +42,7 @@ L2:
     MOV CX, X
     MOV DX, Y
     MOV A,DX
-    SUB A,45
+    SUB A,47
 L3: 
     INT 10h
     DEC DX
@@ -49,7 +52,7 @@ L3:
     ADD CX,50
     MOV DX, Y
     MOV A,DX
-    SUB A,45
+    SUB A,47
 L4: 
     INT 10h
     DEC DX
@@ -70,7 +73,10 @@ RESULT MACRO
     INC BX
     CMP GRID[BX],1
     JNE D1
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER2
     MOV AH,9
@@ -87,7 +93,10 @@ D1:
     INC BX
     CMP GRID[BX],1
     JNE D2
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER2
     MOV AH,9
@@ -105,7 +114,10 @@ d2:
     INC BX
     CMP GRID[BX],1
     JNE D3
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER2
     MOV AH,9
@@ -122,7 +134,10 @@ D3:
     ADD BX,3
     CMP GRID[BX],1
     JNE D4
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER2
     MOV AH,9
@@ -138,7 +153,10 @@ D4:
     ADD BX,3
     CMP GRID[BX],1
     JNE D5
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER2
     MOV AH,9
@@ -154,7 +172,10 @@ D5:
     ADD BX,3
     CMP GRID[BX],1
     JNE D6
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER2
     MOV AH,9
@@ -170,7 +191,10 @@ D6:
     ADD BX,2
     CMP GRID[BX],1
     JNE D7
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER2
     MOV AH,9
@@ -186,7 +210,10 @@ D7:
     ADD BX,4
     CMP GRID[BX],1
     JNE E0
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER2
     MOV AH,9
@@ -203,7 +230,10 @@ E0:
     INC BX
     CMP GRID[BX],2
     JNE E1
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER1
     MOV AH,9
@@ -220,7 +250,10 @@ E1:
     INC BX
     CMP GRID[BX],2
     JNE E2
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER1
     MOV AH,9
@@ -238,7 +271,10 @@ E2:
     INC BX
     CMP GRID[BX],2
     JNE E3
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER1
     MOV AH,9
@@ -255,7 +291,10 @@ E3:
     ADD BX,3
     CMP GRID[BX],2
     JNE E4
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER1
     MOV AH,9
@@ -271,7 +310,10 @@ E4:
     ADD BX,3
     CMP GRID[BX],2
     JNE E5
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER1
     MOV AH,9
@@ -287,7 +329,10 @@ E5:
     ADD BX,3
     CMP GRID[BX],2
     JNE E6
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER1
     MOV AH,9
@@ -303,7 +348,10 @@ E6:
     ADD BX,2
     CMP GRID[BX],2
     JNE E7
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER1
     MOV AH,9
@@ -319,7 +367,10 @@ E7:
     ADD BX,4
     CMP GRID[BX],2
     JNE E8
-    MOV AX, 3
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,13
+    MOV BH,0
     INT 10h
     LEA DX,PLAYER1
     MOV AH,9
@@ -347,7 +398,7 @@ DRAW_BOX MACRO
     draw_row 
     ;row 2
     MOV X,80
-    MOV Y,125
+    MOV Y,123
     draw_row 
     ADD X,50
     draw_row 
@@ -355,7 +406,7 @@ DRAW_BOX MACRO
     draw_row 
     ;row 1
     MOV X,80
-    MOV Y,80
+    MOV Y,76
     draw_row 
     ADD X,50
     draw_row 
@@ -394,9 +445,21 @@ main Proc
         
     
 kkk:                          ;GAME LOOP
+    RESULT
+    CMP STEP,9
+    JL FFG
+    MOV Ah,2            ;MOVE CURSOR
+    MOV DH,2
+    MOV DL,15
+    MOV BH,0
+    INT 10h
+    LEA DX,DRAW
+    MOV AH,9
+    INT 21H
+    JMP OVER
     ;B=ROW,C=COLUMN
     ;DRAW HIGHLIGHTED BOX
-    RESULT
+FFG:    
     DRAW_BOX
     
     MOV BX,B
@@ -410,10 +473,37 @@ kkk:                          ;GAME LOOP
     
     DRAW_ROW
     
+    CMP TURN,1
+    JNE GDJ
+    MOV DH,12
+    MOV DL,6
+    MOV AL,'X'
+    MOV BL,15     ;COLOR
+    CHAR_SHOW
+    MOV DH,12
+    MOV DL,72
+    MOV AL,'O'
+    MOV BL,0     ;COLOR
+    CHAR_SHOW
+    JMP GGH
+GDJ:
+    MOV DH,12
+    MOV DL,6
+    MOV AL,'X'
+    MOV BL,0     ;COLOR
+    CHAR_SHOW
+    MOV DH,12
+    MOV DL,72
+    MOV AL,'O'
+    MOV BL,15     ;COLOR
+    CHAR_SHOW
+    
+GGH:    
         
     ;INPUT COMMAND   
     MOV AH, 0
     INT 16h
+    
     CMP AH,77
     JE RIGHT
     
@@ -439,7 +529,7 @@ TT:
 UP:
     cmp C,80
     JLE DDD
-    SUB C,45
+    SUB C,47
     SUB Q,6
     SUB ID,3
     JMP KKK
@@ -452,13 +542,13 @@ DDD:
 DOWN:
     cmp C,170
     JGE DDD2
-    ADD C,45
+    ADD C,47
     ADD Q,6
     ADD ID,3
     JMP KKK
 DDD2:
-    MOV C,80
-    MOV Q,7
+    MOV C,76
+    MOV Q,6
     SUB ID,6
     JMP KKK 
 
@@ -473,7 +563,8 @@ GOL:
     CMP AH,2DH
     JE AXE
     JMP PKP
-    
+DEMO:
+    JMP KKK    
 
 OOP:
     
@@ -482,12 +573,16 @@ OOP:
     JE OOP2
     JMP KKK
 OOP2:
+    CMP TURN,2
+    JNE DEMO
+    MOV TURN,1
     MOV GRID[BX],1
     MOV DH,Q
     MOV DL,P
     MOV AL,'O'
     MOV BL,14
     CHAR_SHOW
+    INC STEP
     JMP KKK
    
 AXE: 
@@ -496,12 +591,16 @@ AXE:
     JE AXE2
     JMP KKK
 AXE2:
+    CMP TURN,1
+    JNE DEMO
+    MOV TURN,2
     MOV GRID[BX],2
     MOV DH,Q
     MOV DL,P
     MOV AL,'X'
-    MOV BL,1
+    MOV BL,1     ;COLOR
     CHAR_SHOW
+    INC STEP
     JMP KKK   
     
 PKP:
@@ -524,13 +623,28 @@ TT2:
 
     
 OVER:   
-     
-        MOV AH, 4CH
-        INT 21h
+    MOV DH,12
+    MOV DL,6
+    MOV AL,'X'
+    MOV BL,0     ;COLOR
+    CHAR_SHOW
+    MOV DH,12
+    MOV DL,72
+    MOV AL,'O'
+    MOV BL,0     ;COLOR
+    CHAR_SHOW
+    ;GETCH
+    MOV AH, 0        
+    INT 16h
+    ;TEXT MODE
+    MOV AX, 3
+    INT 10h
+    MOV AH, 4CH
+    INT 21h
 main EndP
      End main
      
      
      
 ;       row    col
-;1,3    7,12,18       13,19,25,
+;1,3    6,12,18       13,19,25,
